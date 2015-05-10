@@ -1,0 +1,15 @@
+library(lubridate)
+headerslist<-read.table("household_power_consumption.txt",sep=";",nrows=1,colClasses="character")
+data<-read.table("household_power_consumption.txt",header=TRUE,sep=";",skip=66637,nrows=2880)
+colnames(data)<-headerslist
+rm(headerslist)
+data$Date<-dmy(data$Date)
+data$Time<-hms(data$Time)
+data$datetime<-data$Date+data$Time
+png(filename="plot3.png",width=480,height=480)
+plot(data$Sub_metering_1 ~ data$datetime,type="n",ylab="Energy sub metering",xlab="")
+lines(data$Sub_metering_1~data$datetime)
+lines(data$Sub_metering_2~data$datetime,col="red")
+lines(data$Sub_metering_3~data$datetime,col="blue")
+legend("topright",pch="-",col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+dev.off()
